@@ -71,7 +71,7 @@
                 direccion: parseFloat(document.getElementById('direccion-propulsion').value)
             };
 
-            fetch('/calcular_viento_relativo/', {
+            fetch('http://127.0.0.1:8000/calcular_viento_relativo/', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ viento_verdadero: vientoVerdadero, propulsion_buque: propulsionBuque })
