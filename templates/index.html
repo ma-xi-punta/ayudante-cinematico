@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Asistente Náutico</title>
+    <link rel="stylesheet" href="/static/style.css">
+
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Asistente Náutico</h1>
+        </header>
+
+        <div class="main-content">
+            <section class="calculadora">
+                <h2>Calculadora de Viento Relativo</h2>
+                <form id="viento-form">
+                    <label for="viento-verdadero">Intensidad del viento verdadero (nudos):</label>
+                    <input type="number" id="viento-verdadero" step="0.1" required>
+
+                    <label for="direccion-verdadero">Dirección del viento verdadero (°):</label>
+                    <input type="number" id="direccion-verdadero" step="0.1" required>
+
+                    <label for="intensidad-propulsion">Intensidad de la propulsión (nudos):</label>
+                    <input type="number" id="intensidad-propulsion" step="0.1" required>
+
+                    <label for="direccion-propulsion">Dirección de la propulsión (°):</label>
+                    <input type="number" id="direccion-propulsion" step="0.1" required>
+
+                    <button type="submit">Calcular Viento Relativo</button>
+                </form>
+
+                <div id="resultado"></div>
+            </section>
+
+            <section class="weather">
+                <h3>Clima de Córdoba:</h3>
+                <div id="clima-info">
+                    <p id="temperatura">Cargando...</p>
+                    <p id="descripcion">Cargando...</p>
+                </div>
+            </section>
+        </div>
+    </div>
+
+    <script>
+        // Obtener el clima de Córdoba
+        fetch('/clima/Cordoba')
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('temperatura').innerText = data.temperatura
+                    ? `Temperatura: ${data.temperatura}°C`
+                    : "No disponible";
+                document.getElementById('descripcion').innerText = data.descripcion || "";
+            })
+            .catch(error => console.error("Error al obtener el clima:", error));
+
+        // Manejo del formulario
+        document.getElementById('viento-form').addEventListener('submit', function(event) {
+            event.preventDefault();
+
+            const vientoVerdadero = {
+                intensidad: parseFloat(document.getElementById('viento-verdadero').value),
+                direccion: parseFloat(document.getElementById('direccion-verdadero').value)
+            };
+
+            const propulsionBuque = {
+                intensidad: parseFloat(document.getElementById('intensidad-propulsion').value),
+                direccion: parseFloat(document.getElementById('direccion-propulsion').value)
+            };
+
+            fetch('/calcular_viento_relativo/', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ viento_verdadero: vientoVerdadero, propulsion_buque: propulsionBuque })
+            })
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('resultado').innerHTML = data.viento_relativo
+                    ? `<p><strong>Intensidad:</strong> ${data.viento_relativo.intensidad.toFixed(2)} nudos</p>
+                       <p><strong>Dirección:</strong> ${data.viento_relativo.direccion.toFixed(2)}°</p>`
+                    : "Error en el cálculo";
+            })
+            .catch(error => console.error("Error en la solicitud:", error));
+        });
+    </script>
+</body>
+</html>
+
