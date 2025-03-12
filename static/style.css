@@ -1,7 +1,7 @@
 /* Asegura que el fondo se vea bien */
 body {
     font-family: Arial, sans-serif;
-    background-image: url('static/background.jpg');
+    background-image: url('./static/background.jpg');
     background-size: cover;
     background-position: center;
     color: white;
