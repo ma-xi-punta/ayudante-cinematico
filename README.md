@@ -78,8 +78,8 @@ npm start
 
 ## 📸 Screenshots
 
-[Nautical Assistant 1](static/day.png)
-[Nautical Assistant 2](static/nigth.png)
+[Nautical Assistant (day)](static/day.png)
+[Nautical Assistant (nigth)](static/nigth.png)
 
 ---
 
